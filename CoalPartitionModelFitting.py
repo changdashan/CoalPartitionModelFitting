@@ -1,4 +1,3 @@
-#import torch
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
@@ -153,20 +152,22 @@ def curve_fit_modelw(model, xdata, ydata, sigma, p, title):
 
     plt.show()
     
-"""
-def calculateSquareRootOfSumOfSquareResiduals(model, p):
-    y_predicted = model(xdata, p)
+    calculateSquareRootOfSumOfSquareResiduals(model, xdata, ydata, popt)
+    
+#---------------------------------------------------------------------------------------------------    
+def calculateSquareRootOfSumOfSquareResiduals(model, xdata, ydata, p):
+    y_predicted = model(xdata, *p)
     r = (ydata - y_predicted)
-    dia_sigma = torch.diag(torch.tensor(sigma))
-    inv_sigma = torch.linalg.inv(dia_sigma)
+    dia_sigma = np.diag(sigma)
+    inv_sigma = np.linalg.inv(dia_sigma)
     print(inv_sigma)
-    print(torch.tensor(r))
+    print(r)
     n = len(xdata)
-    rr = torch.tensor(r) @ inv_sigma.double()
-    ss_r = np.sum(rr.numpy()**2)
+    rr = r @ inv_sigma
+    ss_r = np.sum(rr**2)
     rmse = np.sqrt(ss_r/n)
     print("The square root of the sume of the squares of residuals:", rmse) 
-"""
+
 
 #---------------------------------------------------------------------------------------------------
 # Example model fitting: coal separation/partition curves    
@@ -180,17 +181,17 @@ print(xdata)
 print(ydata)
 
 # same data set can be fitting to different models
-model = model_int_normal_forJig
-p = [0.2, 1.5]
+#model = model_int_normal_forJig
+#p = [0.2, 1.5]
 
 model = model_Logistics
 p=[10, 1.5]
 
-model = model_Modified_Logistics
-p=[15, 1.5, -1, 0.1]
+#model = model_Modified_Logistics
+#p=[10, 1.5, -1, 0.1]
 
-model = model_Modified_HyperbolicTangent
-p = [10, 1.5, 1, -1, -0.1]
+#model = model_Modified_HyperbolicTangent
+#p = [10, 1.5, 1, -1, -0.1]
 
 #title = model.__name__
 #curve_fit_model(model_Logistics, xdata, ydata, p=p, title=title)
