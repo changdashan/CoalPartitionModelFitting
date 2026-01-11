@@ -70,51 +70,8 @@ def	model_Modified_HyperbolicTangent(x, *p):
 		return f
 
 #---------------------------------------------------------------------------------------------------
-# curve fit to the mode and plot the graph
-# this is the initial edition. Please curve_fit_modelw
-def curve_fit_model(model, xdata, ydata, p, title):
-    start_time = time.perf_counter()
-    popt, pcov, infodict, errmsg, ier = curve_fit(model, xdata, ydata, p0=p, full_output=True)
-    # Get the number of function evaluations
-    iteration_count = infodict['nfev']
-    print(f"Number of function calls (iterations): {iteration_count}")
-    end_time = time.perf_counter()
-    elapsed_time = end_time - start_time
-    print(f"The code block executed in {elapsed_time:.4f} seconds")    
-
-    print (popt)
-    print (pcov)
-
-    x0 = np.linspace(1.2, 2.4, 120)
-    y0 = model(x0, *popt)
-
-    x = []
-    y = []
-
-    for i in range(len(x0)):
-        if y0[i] >= 0 and y0[i] <= 100 :
-            x.append(x0[i])
-            y.append(y0[i])        
-
-    plt.scatter(xdata,ydata,label='Data')
-    plt.grid(color='gray', linestyle='--', linewidth=0.5)
-    plt.plot(x, y, 'r-', label='Fit')
-    plt.legend()
-    plt.xlabel("Coal Density")
-    plt.ylabel("Partition (%)")
-    plt.title("Model: " + title)
-    xtick_positions = [1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4]
-    plt.xticks(xtick_positions)  
-    ytick_positions = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
-    plt.yticks(ytick_positions)
-    manager = plt.get_current_fig_manager()
-    manager.window.title("Coal Partition Curve")
-
-    plt.show()
-        
-#---------------------------------------------------------------------------------------------------
 # curve_fit to the model with sigma as a weight assigned and draw the graph 
-def curve_fit_modelw(model, xdata, ydata, sigma, p, title): 
+def curve_fit_model(model, xdata, ydata, sigma, p, title): 
     if len(sigma) == 0:
         sigma = [1] * len(xdata) 
     #popt, pcov = curve_fit(model, xdata, ydata, sigma=sigma, p0=p, xtol=1e-6)
@@ -199,5 +156,4 @@ p=[10, 1.5]
 #sigma = [0.1, 0.5, 1., 1., 1., 1., 0.5, 0.2 ]         # for coal float and sink test, at the two ends of density intervals, it should be more accurate as more percentage of coal fall into the two ends of densities
 sigma = [1.0] * len(xdata)
 title = model.__name__
-curve_fit_modelw(model, xdata, ydata, sigma, p=p, title=title)
-
+curve_fit_model(model, xdata, ydata, sigma, p=p, title=title)
